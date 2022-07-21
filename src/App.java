@@ -10,15 +10,10 @@ public class App {
         var client = new ApiClient();
         
         // Extrair: título, poster, classificação
-        var urlImdb = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
+        var urlImdb = "http://localhost:8080/languages";
         String imdbBody = client.fetch(urlImdb);
-        ContentExtractor imdbContentExtractor = new IMDBContentExtractor();
-        List<Content> contents = imdbContentExtractor.extractFromJson(imdbBody);
-        
-        var urlNasa = "https://api.nasa.gov/planetary/apod?api_key=0L5vmAuoYi36tkAnEzoMxo59l3YGhevyT0DKrfxr&start_date=2022-06-12&end_date=2022-06-14";
-        String nasaBody = client.fetch(urlNasa);
-        ContentExtractor nasaContentExtractor = new NASAContentExtractor();
-        contents.addAll(nasaContentExtractor.extractFromJson(nasaBody));
+        ContentExtractor extractor = new LanguagesContentExtractor();
+        List<Content> contents = extractor.extractFromJson(imdbBody);        
 
         var factory = new StickerFactory();
 
@@ -26,11 +21,13 @@ public class App {
         for (var content : contents) {
             
             System.out.println(content.getTitle());            
+            System.out.println(content.getImageURL());            
             System.out.println("-----------------------------------------------------------------------");
 
-            String imageUrl = content.getImageURL();
             String title = content.getTitle();
+            String imageUrl = content.getImageURL();
             var stream = new URL(imageUrl).openStream();
+            
             factory.create(stream, title + ".png", content.getMessageText());
         }
     }

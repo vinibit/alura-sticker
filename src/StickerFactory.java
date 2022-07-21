@@ -18,18 +18,18 @@ public class StickerFactory {
     public void create(InputStream stream, String fileName, String message) throws Exception {
 
         // leitura da imagem        
-        BufferedImage movieImage = ImageIO.read(stream);
+        BufferedImage image = ImageIO.read(stream);        
 
         // cria nova imagem, ajustando tamanho e com transparência
-        int stickerHeight = movieImage.getHeight() + 200;
-        BufferedImage stickerImage = new BufferedImage(movieImage.getWidth(), stickerHeight, BufferedImage.TRANSLUCENT);
+        int stickerHeight = image.getHeight() + 200;
+        BufferedImage stickerImage = new BufferedImage(image.getWidth(), stickerHeight, BufferedImage.TRANSLUCENT);
 
         // copiar a imagem original na nova (em memória)
         Graphics2D graphics = (Graphics2D) stickerImage.getGraphics();
-        graphics.drawImage(movieImage, 0, 0, null);
+        graphics.drawImage(image, 0, 0, null);
 
         // configurar a fonte
-        var font = new Font("Impact", Font.BOLD, 128);        
+        var font = new Font("Impact", Font.BOLD, 128);
         graphics.setFont(font);
         graphics.setColor(Color.YELLOW);
 
