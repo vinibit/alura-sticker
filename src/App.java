@@ -1,70 +1,37 @@
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws Exception {
 
         // Fazer uma conexão HTTP e buscar os Top 250 filmes
         //var url = "https://imdb-api.com/en/API/Top250Movies/k_teste";        
-        var url = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
-        URI address = URI.create(url);
         
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(address)
-            .GET()
-            .build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
+        var client = new ApiClient();
         
         // Extrair: título, poster, classificação
-        JsonParser parser = new JsonParser();
-        List<Map<String, String>> moviesList = parser.parse(body);
+        var urlImdb = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
+        String imdbBody = client.fetch(urlImdb);
+        ContentExtractor imdbContentExtractor = new IMDBContentExtractor();
+        List<Content> contents = imdbContentExtractor.extractFromJson(imdbBody);
+        
+        var urlNasa = "https://api.nasa.gov/planetary/apod?api_key=0L5vmAuoYi36tkAnEzoMxo59l3YGhevyT0DKrfxr&start_date=2022-06-12&end_date=2022-06-14";
+        String nasaBody = client.fetch(urlNasa);
+        ContentExtractor nasaContentExtractor = new NASAContentExtractor();
+        contents.addAll(nasaContentExtractor.extractFromJson(nasaBody));
 
         var factory = new StickerFactory();
 
         // Manipular e exibir dados
-        for (var movieData : moviesList) {
+        for (var content : contents) {
             
-            System.out.println(movieData.get("title"));
-            System.out.println(movieData.get("image"));
-            System.out.println(movieData.get("imDbRating"));
-            System.out.println("------------------------------------------------------------------------------------");
+            System.out.println(content.getTitle());            
+            System.out.println("-----------------------------------------------------------------------");
 
-            String imageUrl = movieData.get("image");
-            String title = movieData.get("title");
-            Integer rating = (int) Double.parseDouble(movieData.get("imDbRating"));
-
-            String message;
-            switch (rating) {
-                case 9:
-                    message = "AEWSOME!";
-                    break;
-
-                case 8:
-                    message = "SHOW!";
-                    break;
-
-                case 7:
-                    message = "GOOD!";
-                    break;
-
-                case 6:
-                    message = "OK!";
-                    break;
-            
-                default:
-                    message = "MEEH!";
-                    break;
-            }
-
+            String imageUrl = content.getImageURL();
+            String title = content.getTitle();
             var stream = new URL(imageUrl).openStream();
-            factory.create(stream, title + ".png", message);
+            factory.create(stream, title + ".png", content.getMessageText());
         }
     }
 }
