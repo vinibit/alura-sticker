@@ -2,18 +2,18 @@ public class Content {
     
     private final String title;
     private final String imageURL;
-    private final String messageText;  
+    private final String rating;  
 
     public Content(String title, String imageURL) {
         this.title = title;
         this.imageURL = imageURL;
-        this.messageText = "";
+        this.rating = null;
     }
 
-    public Content(String title, String imageURL, String messageText) {
+    public Content(String title, String imageURL, String rating) {
         this.title = title;
         this.imageURL = imageURL;
-        this.messageText = messageText;
+        this.rating = rating;
     }
 
     public String getTitle() {
@@ -25,6 +25,28 @@ public class Content {
     }
 
     public String getMessageText() {
+        String messageText;
+        switch (rating) {
+            case "1":
+                messageText = "Awesome!";
+                break;
+
+            case "2":
+                messageText = "Show!";
+                break;
+
+            case "3":
+                messageText = "Good.";
+                break;
+
+            case "4":
+                messageText = "Ok...";
+                break;
+        
+            default:
+                messageText = "MEEEEH!!!";
+                break;
+        }
         return messageText;
     }    
 }

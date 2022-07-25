@@ -10,19 +10,18 @@ public class App {
         var client = new ApiClient();
         
         // Extrair: título, poster, classificação
-        var urlImdb = "http://localhost:8080/languages";
-        String imdbBody = client.fetch(urlImdb);
+        var url = "https://bit-languages-api.herokuapp.com/languages";
+        String body = client.fetch(url);
         ContentExtractor extractor = new LanguagesContentExtractor();
-        List<Content> contents = extractor.extractFromJson(imdbBody);        
+        List<Content> contents = extractor.extractFromJson(body);        
 
         var factory = new StickerFactory();
 
         // Manipular e exibir dados
         for (var content : contents) {
             
-            System.out.println(content.getTitle());            
-            System.out.println(content.getImageURL());            
-            System.out.println("-----------------------------------------------------------------------");
+            System.out.println(content.getTitle());                        
+            System.out.println("---------------------------");
 
             String title = content.getTitle();
             String imageUrl = content.getImageURL();

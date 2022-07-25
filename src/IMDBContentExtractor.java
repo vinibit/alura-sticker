@@ -13,36 +13,10 @@ public class IMDBContentExtractor implements ContentExtractor {
         for (var attr : parser.parse(json)) {
             String title = attr.get("title");
             String imageUrl = attr.get("image");
-            Integer rating = (int) Double.parseDouble(attr.get("imDbRating"));
-            String messageText = getMessage(rating);
-            contents.add(new Content(title, imageUrl, messageText));
+            String rating = attr.get("imDbRating");
+            contents.add(new Content(title, imageUrl, rating));
         }
         return contents;
     }
-
-    private String getMessage(Integer rating) {
-        String messageText = "COOL!!!";
-        switch (rating) {
-            case 9:
-                messageText = "AEWSOME!";
-                break;
-
-            case 8:
-                messageText = "SHOW";
-                break;
-
-            case 7:
-                messageText = "GOOD";
-                break;
-
-            case 6:
-                messageText = "OK";
-                break;
         
-            default:
-                messageText = "MEEEEH!!!";
-                break;
-        }
-        return messageText;
-    }
 }

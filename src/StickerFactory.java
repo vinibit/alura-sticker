@@ -21,7 +21,7 @@ public class StickerFactory {
         BufferedImage image = ImageIO.read(stream);        
 
         // cria nova imagem, ajustando tamanho e com transparência
-        int stickerHeight = image.getHeight() + 200;
+        int stickerHeight = image.getHeight() + 100;
         BufferedImage stickerImage = new BufferedImage(image.getWidth(), stickerHeight, BufferedImage.TRANSLUCENT);
 
         // copiar a imagem original na nova (em memória)
@@ -29,7 +29,7 @@ public class StickerFactory {
         graphics.drawImage(image, 0, 0, null);
 
         // configurar a fonte
-        var font = new Font("Impact", Font.BOLD, 128);
+        var font = new Font("Impact", Font.BOLD, 32);
         graphics.setFont(font);
         graphics.setColor(Color.YELLOW);
 
